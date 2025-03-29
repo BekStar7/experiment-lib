@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="status">Connecting...</div>
+    <div id="messages"></div>
+
+    <script>
+        const status = document.getElementById('status');
+        const messages = document.getElementById('messages');
+
+        // Create WebSocket connection
+        const socket = new WebSocket('ws://localhost:8000/ws/experiments/?api_key=0b4aa9f1be74a3583643cad1ba72df8a&device_id=1');
+
+        // Connection opened
+        socket.addEventListener('open', (event) => {
+            status.textContent = 'Connected!';
+            messages.innerHTML += '<p>Connection established!</p>';
+        });
+
+        // Listen for messages
+        socket.addEventListener('message', (event) => {
+            messages.innerHTML += `<p>Message received: ${event.data}</p>`;
+        });
+
+        // Connection closed
+        socket.addEventListener('close', (event) => {
+            status.textContent = `Disconnected (Code: ${event.code})`;
+            messages.innerHTML += `<p>Connection closed: ${event.code} - ${event.reason}</p>`;
+        });
+
+        // Error handler
+        socket.addEventListener('error', (event) => {
+            status.textContent = 'Error!';
+            messages.innerHTML += '<p>Error occurred!</p>';
+        });
+    </script>
+</body>
+</html>
